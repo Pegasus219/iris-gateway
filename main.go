@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"github.com/kataras/iris"
 	"iris-gateway/common"
+	"iris-gateway/config"
 	"iris-gateway/web/middlewares"
 	"iris-gateway/web/routers"
 )
 
 func main() {
 	localIp := "0.0.0.0"
-	listenPort := "80"
+	listenPort := config.HttpPort
 	serverAddr := fmt.Sprintf("%s:%s", localIp, listenPort)
 
 	app := iris.New()

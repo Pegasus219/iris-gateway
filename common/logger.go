@@ -4,17 +4,17 @@ import (
 	"github.com/kataras/golog"
 	"github.com/kataras/iris"
 	"github.com/kataras/iris/middleware/logger"
-	"iris-gateway/common/utils"
+	"iris-gateway/config"
 	"log"
 	"os"
 )
 
 func InitLogger(app *iris.Application) {
 	golog.SetTimeFormat("2006/01/02 15:04:05.000")
-	if debug() {
+	if config.IsDebugOpen {
 		log.SetFlags(log.Lshortfile | log.Lmicroseconds)
 		golog.SetLevel("debug")
-		golog.SetOutput(logPath())
+		golog.SetOutput(logFile())
 		//打开请求日志
 		customLogger := logger.New(logger.Config{
 			Status:  true,
@@ -30,19 +30,8 @@ func InitLogger(app *iris.Application) {
 	}
 }
 
-func debug() bool {
-	debugOpen, err := utils.GetIntEnv("IRIS_DEBUG", 0)
-	if err != nil {
-		panic(err)
-	}
-	if debugOpen > 0 {
-		return true
-	}
-	return false
-}
-
-func logPath() *os.File {
-	logPath := utils.GetEnv("IRIS_LOG_PATH", "")
+func logFile() *os.File {
+	logPath := config.LogFilePath
 	if logPath == "" {
 		return os.Stdout
 	}
